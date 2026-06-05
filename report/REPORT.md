@@ -229,13 +229,13 @@ Chạy 5 benchmark queries của nhóm trên implementation cá nhân của bạ
 ## 7. What I Learned (5 điểm — Demo)
 
 **Điều hay nhất tôi học được từ thành viên khác trong nhóm:**
-> *Viết 2-3 câu:*
+> Điều hay nhất tôi học được là strategy giữ cấu trúc tự nhiên như `RecursiveChunker` và `Paragraph/Markdown Chunker` thường dễ kiểm chứng hơn fixed-size vì chunk còn giữ được mạch đoạn văn của bài báo. Tôi cũng thấy `SentenceChunker` có ưu điểm rõ là không cắt giữa câu, nên khi đọc top-k retrieved chunks sẽ dễ xác định evidence đúng hay sai hơn. So với strategy của tôi, các cách chia theo cấu trúc văn bản có lợi thế khi câu hỏi cần grounding chính xác.
 
 **Điều hay nhất tôi học được từ nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
+> Qua demo, tôi nhận ra chất lượng RAG không chỉ phụ thuộc vào chunking mà còn phụ thuộc vào metadata, query design và cách đánh giá top-k results. Metadata filtering rất hữu ích khi câu hỏi có phạm vi rõ ràng, ví dụ query về không gian dùng `metadata_filter={"category": "space"}` giúp kết quả tập trung hơn. Tôi cũng học được rằng không nên chỉ nhìn similarity score, mà cần đọc lại chunk được retrieve để xem nó có thật sự trả lời đúng câu hỏi không.
 
 **Nếu làm lại, tôi sẽ thay đổi gì trong data strategy?**
-> *Viết 2-3 câu:*
+> Nếu làm lại, tôi sẽ thử dùng `RecursiveChunker` hoặc kết hợp recursive với sentence-based chunking thay vì chỉ dùng fixed-size lớn. Tôi cũng sẽ bổ sung metadata chi tiết hơn như `article_id`, `topic`, `organization`, `main_entities` và `category` để lọc tốt hơn các query về Microsoft, AI, không gian hoặc giáo dục. Failure case rõ nhất là query #1 và #4: top-3 không có bài đúng gold answer, cho thấy `_mock_embed` chưa hiểu nghĩa tiếng Việt và fixed-size chunking vẫn có thể làm mất trọng tâm retrieval.
 
 ---
 

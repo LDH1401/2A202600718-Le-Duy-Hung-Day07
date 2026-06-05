@@ -5,18 +5,32 @@ from .store import EmbeddingStore
 
 class KnowledgeBaseAgent:
     """
-    An agent that answers questions using a vector knowledge base.
+    Tác nhân trả lời câu hỏi bằng cơ sở tri thức vector.
 
-    Retrieval-augmented generation (RAG) pattern:
-        1. Retrieve top-k relevant chunks from the store.
-        2. Build a prompt with the chunks as context.
-        3. Call the LLM to generate an answer.
+    Mẫu sinh câu trả lời tăng cường truy xuất (RAG):
+        1. Truy xuất top-k đoạn liên quan từ kho.
+        2. Tạo prompt với các đoạn làm ngữ cảnh.
+        3. Gọi LLM để sinh câu trả lời.
     """
 
     def __init__(self, store: EmbeddingStore, llm_fn: Callable[[str], str]) -> None:
-        # TODO: store references to store and llm_fn
-        pass
+        self.store = store
+        self.llm_fn = llm_fn
 
     def answer(self, question: str, top_k: int = 3) -> str:
-        # TODO: retrieve chunks, build prompt, call llm_fn
-        raise NotImplementedError("Implement KnowledgeBaseAgent.answer")
+        results = self.store.search(question, top_k=top_k)
+        context = "\n\n".join(
+            f"[{index}] {result['content']}"
+            for index, result in enumerate(results, start=1)
+        )
+        if not context:
+            context = "Không tìm thấy ngữ cảnh liên quan trong knowledge base."
+
+        prompt = (
+            "Bạn là trợ lý trả lời câu hỏi dựa trên ngữ cảnh được cung cấp.\n"
+            "Chỉ dùng thông tin trong ngữ cảnh nếu có thể.\n\n"
+            f"Ngữ cảnh:\n{context}\n\n"
+            f"Câu hỏi: {question}\n"
+            "Câu trả lời:"
+        )
+        return str(self.llm_fn(prompt))

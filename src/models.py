@@ -4,12 +4,12 @@ from dataclasses import dataclass, field
 @dataclass
 class Document:
     """
-    A text document with optional metadata.
+    Tài liệu văn bản với metadata tùy chọn.
 
-    Fields:
-        id:       Unique identifier string.
-        content:  The raw text content.
-        metadata: Arbitrary key-value metadata (e.g. source, date, author).
+    Các trường:
+        id:       Chuỗi định danh duy nhất.
+        content:  Nội dung văn bản thô.
+        metadata: Metadata dạng key-value bất kỳ (ví dụ: source, date, author).
     """
 
     id: str

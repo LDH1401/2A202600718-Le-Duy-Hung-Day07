@@ -9,7 +9,7 @@ EMBEDDING_PROVIDER_ENV = "EMBEDDING_PROVIDER"
 
 
 class MockEmbedder:
-    """Deterministic embedding backend used by tests and default classroom runs."""
+    """Bộ tạo embedding có kết quả ổn định, dùng cho test và lượt chạy mặc định trên lớp."""
 
     def __init__(self, dim: int = 64) -> None:
         self.dim = dim
@@ -27,7 +27,7 @@ class MockEmbedder:
 
 
 class LocalEmbedder:
-    """Sentence Transformers-backed local embedder."""
+    """Bộ tạo embedding cục bộ chạy bằng Sentence Transformers."""
 
     def __init__(self, model_name: str = LOCAL_EMBEDDING_MODEL) -> None:
         from sentence_transformers import SentenceTransformer
@@ -44,7 +44,7 @@ class LocalEmbedder:
 
 
 class OpenAIEmbedder:
-    """OpenAI embeddings API-backed embedder."""
+    """Bộ tạo embedding chạy bằng OpenAI embeddings API."""
 
     def __init__(self, model_name: str = OPENAI_EMBEDDING_MODEL) -> None:
         from openai import OpenAI

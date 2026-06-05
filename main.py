@@ -18,18 +18,49 @@ from src.embeddings import (
 from src.models import Document
 from src.store import EmbeddingStore
 
-SAMPLE_FILES = [
-    "data/python_intro.txt",
-    "data/vector_store_notes.md",
-    "data/rag_system_design.md",
-    "data/customer_support_playbook.txt",
-    "data/chunking_experiment_report.md",
-    "data/vi_retrieval_notes.md",
-]
+NEWS_CATEGORIES = {
+    "01": "ai_agent",
+    "02": "ai_interview",
+    "03": "government_tech",
+    "04": "environment_science",
+    "05": "biotech",
+    "06": "ai_economy",
+    "07": "consumer_tech",
+    "08": "consumer_audio",
+    "09": "space",
+    "10": "digital_government",
+    "11": "vietnamese_llm",
+    "12": "crypto",
+    "13": "space",
+    "14": "nuclear_engineering",
+    "15": "space",
+    "16": "quantum_computing",
+    "17": "ai_education",
+    "18": "space",
+    "19": "ai_agent",
+    "20": "ai_startup",
+}
+
+
+def get_sample_files() -> list[str]:
+    """Lấy 20 bài báo Markdown mới trong thư mục data."""
+    return [str(path) for path in sorted(Path("data").glob("[0-9][0-9]_*.md"))]
+
+
+def build_metadata(path: Path) -> dict[str, str]:
+    """Tạo metadata đơn giản cho bài báo để demo filter/search."""
+    article_number = path.name[:2]
+    return {
+        "source": str(path),
+        "extension": path.suffix.lower(),
+        "category": NEWS_CATEGORIES.get(article_number, "news"),
+        "language": "vi",
+        "doc_type": "news_article",
+    }
 
 
 def load_documents_from_files(file_paths: list[str]) -> list[Document]:
-    """Load documents from file paths for the manual demo."""
+    """Load tài liệu từ các file path cho manual demo."""
     allowed_extensions = {".md", ".txt"}
     documents: list[Document] = []
 
@@ -49,7 +80,7 @@ def load_documents_from_files(file_paths: list[str]) -> list[Document]:
             Document(
                 id=path.stem,
                 content=content,
-                metadata={"source": str(path), "extension": path.suffix.lower()},
+                metadata=build_metadata(path),
             )
         )
 
@@ -57,13 +88,13 @@ def load_documents_from_files(file_paths: list[str]) -> list[Document]:
 
 
 def demo_llm(prompt: str) -> str:
-    """A simple mock LLM for manual RAG testing."""
+    """Mock LLM đơn giản để test RAG thủ công."""
     preview = prompt[:400].replace("\n", " ")
     return f"[DEMO LLM] Generated answer from prompt preview: {preview}..."
 
 
 def run_manual_demo(question: str | None = None, sample_files: list[str] | None = None) -> int:
-    files = sample_files or SAMPLE_FILES
+    files = sample_files or get_sample_files()
     query = question or "Summarize the key information from the loaded files."
 
     print("=== Manual File Test ===")
